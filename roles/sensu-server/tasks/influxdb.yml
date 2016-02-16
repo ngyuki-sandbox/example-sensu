@@ -1,0 +1,30 @@
+---
+
+- shell: rpm -qi influxdb
+  tags: yum
+  register: res
+  always_run: yes
+  failed_when: no
+  changed_when: no
+
+- yum: name=https://s3.amazonaws.com/influxdb/influxdb-0.10.0-1.x86_64.rpm
+  tags: yum
+  when: res.rc != 0
+
+- yum: name=jq
+  tags: yum
+
+- service: name=influxdb state=started
+
+- name: influx exists sensu database
+  shell: |
+     influx -execute 'show databases' -format json | jq -r '.results[].series[].values[][]'
+  register: res
+  always_run: yes
+  failed_when: no
+  changed_when: not "sensu" in res.stdout_lines
+
+- name: influx create sensu database
+  shell: |
+     influx -execute 'create database sensu'
+  when: res|changed

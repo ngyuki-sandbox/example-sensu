@@ -1,0 +1,16 @@
+---
+
+- include: rabbitmq.yml
+  tags: rabbitmq
+
+- include: redis.yml
+  tags: redis
+
+- include: sensu.yml
+  tags: sensu
+
+- include: influxdb.yml
+  tags: influxdb
+
+- include: grafana.yml
+  tags: grafana

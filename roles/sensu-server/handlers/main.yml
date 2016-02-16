@@ -1,0 +1,12 @@
+---
+
+- name: sensu-all restart
+  service: name={{ item }} state=restarted
+  with_items:
+    - uchiwa
+    - sensu-client
+    - sensu-api
+    - sensu-server
+
+- name: grafana restart
+  service: name=grafana-server state=restarted

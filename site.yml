@@ -1,0 +1,24 @@
+---
+
+- hosts: [ manager_servers, agent_servers ]
+  sudo: yes
+  roles:
+    - role: sensu-common
+      tags:
+        - sensu-common
+
+- hosts: [ manager_servers ]
+  sudo: yes
+  roles:
+    - role: sensu-server
+      tags:
+        - sensu
+        - sensu-server
+
+- hosts: [ agent_servers ]
+  sudo: yes
+  roles:
+    - role: sensu-client
+      tags:
+        - sensu
+        - sensu-client

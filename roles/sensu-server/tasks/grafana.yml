@@ -1,0 +1,22 @@
+---
+
+- yum: name=nginx
+  tags: yum
+
+- shell: rpm -qi influxdb
+  register: res
+  always_run: yes
+  failed_when: no
+  changed_when: no
+
+- yum: name=https://grafanarel.s3.amazonaws.com/builds/grafana-2.6.0-1.x86_64.rpm
+  tags: yum
+  when: res.rc != 0
+
+- service: name=grafana-server state=started enabled=yes
+
+- copy:
+    src: grafana.ini
+    dest: /etc/grafana/
+  notify:
+    - grafana restart

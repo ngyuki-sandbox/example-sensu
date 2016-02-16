@@ -1,0 +1,33 @@
+---
+
+- yum: name={{ item }}
+  tags: yum
+  with_items:
+    - uchiwa
+
+- copy:
+    src: "{{ item }}"
+    dest: /etc/sensu/conf.d/
+    owner: sensu
+    group: sensu
+  with_fileglob:
+    - conf.d/*.json
+  notify:
+    - sensu-all restart
+
+- copy:
+    src: "{{ item }}"
+    dest: /etc/sensu/
+    owner: uchiwa
+    group: uchiwa
+  with_items:
+    - uchiwa.json
+  notify:
+    - sensu-all restart
+
+- service: name={{ item }} state=started enabled=yes
+  with_items:
+    - sensu-server
+    - sensu-api
+    - sensu-client
+    - uchiwa

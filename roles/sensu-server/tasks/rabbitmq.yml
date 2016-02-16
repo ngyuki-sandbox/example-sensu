@@ -1,0 +1,46 @@
+---
+
+- yum: name={{ item }}
+  tags: yum
+  with_items:
+    - rabbitmq-server
+
+- service: name={{ item }} state=started enabled=yes
+  with_items:
+    - rabbitmq-server
+
+- name: rabbitmq vhost exists
+  shell: |
+    rabbitmqctl -q list_vhosts
+  register: res
+  always_run: yes
+  changed_when: not "/sensu" in res.stdout_lines
+
+- name: rabbitmq add vhost
+  shell: |
+    rabbitmqctl add_vhost /sensu
+  when: res|changed
+
+- name: rabbitmq user exists
+  shell: |
+    sudo rabbitmqctl -q list_users | cut -f1 -d$'\t'
+  register: res
+  always_run: yes
+  changed_when: not "sensu" in res.stdout_lines
+
+- name: rabbitmq add user
+  shell: |
+    rabbitmqctl add_user sensu secret
+  when: res|changed
+
+- name: rabbitmq permission exists
+  shell: |
+    rabbitmqctl list_permissions -q -p /sensu | cut -f1 -d$'\t'
+  register: res
+  always_run: yes
+  changed_when: not "sensu" in res.stdout_lines
+
+- name: rabbitmq add permission
+  shell: |
+    rabbitmqctl set_permissions -p /sensu sensu ".*" ".*" ".*"
+  when: res|changed

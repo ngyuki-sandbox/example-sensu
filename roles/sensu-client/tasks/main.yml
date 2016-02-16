@@ -1,0 +1,15 @@
+---
+
+- copy:
+    src: "{{ item }}"
+    dest: /etc/sensu/conf.d/
+    owner: sensu
+    group: sensu
+  with_fileglob:
+    - conf.d/*.json
+  notify:
+    - sensu-client restart
+
+- service: name={{ item }} state=started enabled=yes
+  with_items:
+    - sensu-client

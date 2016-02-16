@@ -1,0 +1,31 @@
+{
+  "handlers": {
+    "metrics": {
+      "type": "set",
+      "handlers": [
+        "graphite",
+        "influxdb"
+      ]
+    },
+    "graphite": {
+      "type": "tcp",
+      "socket": {
+        "host": "127.0.0.1",
+        "port": 2003
+      },
+      "mutator": "graphite"
+    }
+  },
+  "mutators": {
+    "graphite": {
+      "command": "mutator-graphite.rb"
+    }
+  },
+  "influxdb": {
+    "database": "sensu",
+    "host": "localhost",
+    "port": "8086",
+    "user": "root",
+    "password": "root"
+  }
+}

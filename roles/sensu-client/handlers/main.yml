@@ -1,0 +1,6 @@
+---
+
+- name: sensu-client restart
+  service: name={{ item }} state=restarted
+  with_items:
+    - sensu-client

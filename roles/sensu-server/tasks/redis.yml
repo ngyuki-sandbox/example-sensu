@@ -1,0 +1,13 @@
+---
+
+- yum: name={{ item }}
+  tags: yum
+  with_items:
+    - redis
+
+- service: name={{ item }} state=started enabled=yes
+  with_items:
+    - redis
+
+- shell: redis-cli ping
+  changed_when: no

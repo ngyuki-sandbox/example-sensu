@@ -1,0 +1,35 @@
+{
+  "checks": {
+    "test": {
+      "command": "echo -n OK",
+      "subscribers": ["all"],
+      "interval": 60
+    },
+    "disk": {
+      "command": "check-disk-usage.rb -w 85 -c 95",
+      "subscribers": ["all"],
+      "interval": 60,
+      "occurrences": 2,
+      "refresh": 180
+    },
+    "cron": {
+      "command": "check-process.rb -p cron",
+      "subscribers": ["all"],
+      "interval": 60
+    },
+    "disk_metrics": {
+      "type": "metric",
+      "subscribers": ["all"],
+      "handlers": ["metrics"],
+      "command": "metrics-disk-usage.rb",
+      "interval": 60
+    },
+    "cpu_metrics": {
+      "type": "metric",
+      "subscribers": ["all"],
+      "handlers": ["metrics"],
+      "command": "metrics-cpu.rb",
+      "interval": 10
+    }
+  }
+}

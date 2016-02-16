@@ -1,0 +1,35 @@
+---
+
+- yum: name={{ item }}
+  tags: yum
+  with_items:
+    - epel-release
+
+- copy:
+    dest: /etc/yum.repos.d/sensu.repo
+    content: |
+      [sensu]
+      name=sensu
+      baseurl=http://repositories.sensuapp.org/yum/$basearch/
+      gpgcheck=0
+      enabled=1
+
+- yum: name={{ item }}
+  tags: yum
+  with_items:
+    - sensu
+
+- gem:
+    name: "{{ item.name }}"
+    state: present
+    executable: /opt/sensu/embedded/bin/gem
+    user_install: no
+    include_dependencies: yes
+  tags:
+    - gem
+  with_items:
+    - { name: sensu-plugins-disk-checks, version: 1.0.3 }
+    - { name: sensu-plugins-load-checks, version: 0.0.4 }
+    - { name: sensu-plugins-vmstats, version: 0.0.3 }
+    - { name: sensu-plugins-process-checks, version: 0.0.6 }
+    - { name: sensu-plugins-cpu-checks, version: 0.0.3 }
