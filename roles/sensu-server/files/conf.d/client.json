@@ -2,6 +2,9 @@
   "client": {
     "name": "localhost",
     "address": "localhost",
-    "subscriptions": [ "all" ]
+    "subscriptions": [
+        "all",
+        "observer"
+    ]
   }
 }

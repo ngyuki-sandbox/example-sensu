@@ -30,6 +30,13 @@
       "handlers": ["metrics"],
       "command": "metrics-cpu.rb",
       "interval": 10
+    },
+    "url_external": {
+      "subscribers": ["observer"],
+      "handlers": ["default"],
+      "command": "/etc/sensu/plugins/check-url-external.sh",
+      "interval": 30,
+      "standalone": true
     }
   }
 }
